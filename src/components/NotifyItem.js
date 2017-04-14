@@ -14,6 +14,7 @@ export default class NotifyItem extends Component {
   render() {
     let { router, notification } = this.props;
     let {
+      user_id,
       topic_id,
       board_id,
       board_name,
@@ -39,9 +40,18 @@ export default class NotifyItem extends Component {
         })}>
         <View style={styles.item}>
           <View style={styles.authorInfo}>
-            <Image
-             style={styles.avatar}
-             source={{ uri: icon }} />
+            <TouchableHighlight
+              style={styles.avatarWapper}
+              underlayColor={colors.underlay}
+              onPress={() => router.toIndividual({
+                userId: user_id,
+                userName: reply_nick_name,
+                userAvatar: icon
+              }, false)}>
+              <Image
+               style={styles.avatar}
+               source={{ uri: icon }} />
+            </TouchableHighlight>
             <View style={styles.author}>
               <Text style={styles.name}>{reply_nick_name}</Text>
               <Text style={styles.date}>{replied_date}</Text>
@@ -56,7 +66,7 @@ export default class NotifyItem extends Component {
               style={styles.button}
               textStyle={styles.buttonText}
               onPress={() => this.props.openReplyModal({
-                // WTF! Why there is different name for common field?!
+                // WTF! Why there are different names for common field?!
                 reply_name: reply_nick_name,
                 reply_posts_id: reply_remind_id,
                 board_id,

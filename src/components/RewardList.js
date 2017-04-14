@@ -2,10 +2,12 @@ import React, { Component } from 'react';
 import {
   View,
   Text,
-  Image
+  Image,
+  TouchableHighlight
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import styles from '../styles/components/_RewardList';
+import colors from '../styles/common/_colors';
 
 export default class RewardList extends Component {
   render() {
@@ -31,12 +33,24 @@ export default class RewardList extends Component {
           </Text>
         </View>
         <View style={styles.rewardUserList}>
-          {reward.userList.map((user, index) => {
+          {reward.userList.map(user => {
+            let { uid, userName, userIcon } = user;
+
             return (
-              <Image
-                key={index}
-                source={{ uri: user.userIcon }}
-                style={styles.rewardUser} />
+              <TouchableHighlight
+                key={uid}
+                style={styles.avatarWapper}
+                underlayColor={colors.underlay}
+                onPress={() => router.toIndividual({
+                  userId: uid,
+                  userName: userName,
+                  userAvatar: userIcon
+                }, false)}>
+                <Image
+                  key={uid}
+                  source={{ uri: userIcon }}
+                  style={styles.rewardUser} />
+              </TouchableHighlight>
             );
           })}
           <Icon

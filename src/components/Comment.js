@@ -9,31 +9,44 @@ import Content from './Content';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import moment from 'moment';
 import styles from '../styles/components/_Comment';
+import colors from '../styles/common/_colors';
 import { CommentButton } from './button';
 import { parseContentWithImage } from '../utils/contentParser';
 
 export default class Comment extends Component {
   render() {
     let {
-      reply_name,
-      userTitle,
-      icon,
-      position,
-      reply_content,
-      posts_date,
-      is_quote,
-      quote_content,
-      mobileSign
-    } = this.props.comment;
+      comment: {
+        reply_id,
+        reply_name,
+        userTitle,
+        icon,
+        position,
+        reply_content,
+        posts_date,
+        is_quote,
+        quote_content,
+        mobileSign
+      },
+      router
+    } = this.props;
 
     posts_date = moment(+posts_date).startOf('minute').fromNow();
 
     return (
       <View style={styles.commentItem}>
         <View style={styles.authorInfo}>
-          <Image
-           style={styles.avatar}
-           source={{ uri: icon }} />
+          <TouchableHighlight
+            underlayColor={colors.underlay}
+            onPress={() => router.toIndividual({
+              userId: reply_id,
+              userName: reply_name,
+              userAvatar: icon
+            }, false)}>
+            <Image
+              style={styles.avatar}
+              source={{ uri: icon }} />
+          </TouchableHighlight>
           <View style={styles.author}>
             <Text style={styles.name}>{reply_name}</Text>
             <Text style={styles.level}>{userTitle}</Text>
@@ -47,7 +60,7 @@ export default class Comment extends Component {
             </View>
           }
           <Content content={reply_content}
-                   router={this.props.router} />
+                   router={router} />
         </View>
         <View style={styles.other}>
           <Text style={styles.date}>{posts_date}</Text>

@@ -113,12 +113,13 @@ export default class Router {
     }, true);
   }
 
-  toIndividual() {
+  toIndividual(user, isReplace = true) {
     this._navigateTo({
       id: 'individual',
       title: '个人',
-      component: Individual
-    }, true);
+      component: Individual,
+      passProps: user
+    }, isReplace);
   }
 
   toAbout() {

@@ -7,7 +7,8 @@ import {
   AlertIOS,
   ScrollView,
   ActivityIndicator,
-  ListView
+  ListView,
+  TouchableHighlight
 } from 'react-native';
 import _ from 'lodash';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -15,6 +16,7 @@ import moment from 'moment';
 import mainStyles from '../styles/components/_Main';
 import indicatorStyles from '../styles/common/_Indicator';
 import styles from '../styles/containers/_TopicDetail';
+import colors from '../styles/common/_colors';
 import Header from '../components/Header';
 import ReplyModal from '../components/modal/ReplyModal';
 import Comment from '../components/Comment';
@@ -123,6 +125,7 @@ class TopicDetail extends Component {
   }
 
   _renderHeader(topic, token, vote) {
+    let { router } = this.props;
     let create_date = moment(+topic.create_date).startOf('minute').fromNow();
     let commentHeaderText =
       topic.replies > 0 ? (topic.replies + '条评论') : '还没有评论，快来抢沙发！';
@@ -146,11 +149,18 @@ class TopicDetail extends Component {
         </View>
         <View style={styles.postContent}>
           <View style={styles.authorInfo}>
-            <View style={styles.avatarWapper}>
+            <TouchableHighlight
+              style={styles.avatarWapper}
+              underlayColor={colors.underlay}
+              onPress={() => router.toIndividual({
+                userId: topic.user_id,
+                userName: topic.user_nick_name,
+                userAvatar: topic.icon
+              }, false)}>
               <Image
                style={styles.avatar}
                source={{ uri: topic.icon }} />
-            </View>
+            </TouchableHighlight>
             <View style={styles.author}>
               <Text style={styles.name}>{topic.user_nick_name}</Text>
               <Text style={styles.level}>{topic.userTitle}</Text>
@@ -171,7 +181,7 @@ class TopicDetail extends Component {
           </View>
           <View style={styles.content}>
             <Content content={topic.content}
-                     router={this.props.router} />
+                     router={router} />
             {topic.poll_info &&
               <VoteList
                 pollInfo={topic.poll_info}
@@ -183,7 +193,7 @@ class TopicDetail extends Component {
           </View>
           {topic.reward &&
             <RewardList reward={topic.reward}
-                        router={this.props.router} />}
+                        router={router} />}
           <View style={styles.other}>
             <Text style={styles.date}>{create_date}</Text>
             {!!topic.mobileSign &&
@@ -254,14 +264,14 @@ class TopicDetail extends Component {
   }
 
   render() {
-    let { topicItem, reply, vote, user } = this.props;
+    let { topicItem, reply, vote, user, router } = this.props;
     let { isReplyModalOpen, currentContent } = this.state;
 
     if (topicItem.isFetching) {
       return (
         <View style={mainStyles.container}>
           <Header title={this.boardName}>
-            <PopButton router={this.props.router} />
+            <PopButton router={router} />
           </Header>
           <View style={indicatorStyles.fullScreenIndicator}>
             <ActivityIndicator />
@@ -274,7 +284,7 @@ class TopicDetail extends Component {
       return (
         <View style={mainStyles.container}>
           <Header title={this.boardName}>
-            <PopButton router={this.props.router} />
+            <PopButton router={router} />
           </Header>
         </View>
       );
@@ -299,7 +309,7 @@ class TopicDetail extends Component {
         }
 
         <Header title={this.boardName}>
-          <PopButton router={this.props.router} />
+          <PopButton router={router} />
           {token &&
             <ReplyButton onPress={() => this.toggleReplyModal(true)} />
             ||
@@ -315,7 +325,7 @@ class TopicDetail extends Component {
               key={comment.reply_posts_id}
               comment={comment}
               token={token}
-              router={this.props.router}
+              router={router}
               openReplyModal={() => this.toggleReplyModal(true, comment)} />
           }
           onEndReached={() => this._endReached()}
