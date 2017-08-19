@@ -19,19 +19,19 @@ import mainStyles from '../styles/components/_Main';
 import styles from '../styles/containers/_Individual';
 import { invalidateUserTopicList, fetchUserTopicList } from '../actions/user/topicListAction';
 
-let TABS = [
-  { label: '最近发表', type: 'topic' },
-  { label: '最近回复', type: 'reply' }
-];
-
 class Individual extends Component {
   constructor(props) {
     super(props);
-    this._initBasicInformation();
+    this._initTabsAndUserInformation();
   }
 
-  _initBasicInformation() {
-    if (!this.props.passProps) {
+  _initTabsAndUserInformation() {
+    this.TABS = [
+      { label: '最近发表', type: 'topic' },
+      { label: '最近回复', type: 'reply' }
+    ];
+    this.isLoginUser = !this.props.passProps;
+    if (this.isLoginUser) {
       let {
         user: {
           authrization: {
@@ -44,7 +44,7 @@ class Individual extends Component {
       this.userId = uid;
       this.userName = userName;
       this.userAvatar = avatar;
-      TABS.push({
+      this.TABS.push({
         label: '我的收藏',
         type: 'favorite'
       });
@@ -85,7 +85,7 @@ class Individual extends Component {
     this.props.fetchUserTopicList({
       userId: this.userId,
       isEndReached: false,
-      type: TABS[e.i].type
+      type: this.TABS[e.i].type
     });
   }
 
@@ -117,7 +117,7 @@ class Individual extends Component {
           tabBarUnderlineStyle={scrollableTabViewStyles.tabBarUnderline}
           tabBarTextStyle={scrollableTabViewStyles.tabBarText}
           onChangeTab={e => this.changeTab(e)}>
-          {TABS.map((tab, index) => {
+          {this.TABS.map((tab, index) => {
             return (
               <TopicList
                 key={index}
