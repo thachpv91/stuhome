@@ -59,16 +59,6 @@ export default function userTopicList(state = defaultState, action) {
         }
       } = action;
 
-      // there are bad data from mobcent API...WTF!!!
-      // https://github.com/UESTC-BBS/API-Docs/issues/13
-      let validUserTopicList = userTopicList.list.filter(item =>
-        item.board_id !== 0 &&
-        item.board_name !== "" &&
-        item.last_reply_date !== "000" &&
-        item.user_id !== 0 &&
-        item.user_nick_name !== ""
-      )
-
       return {
         ...state,
         [userId]: {
@@ -78,7 +68,7 @@ export default function userTopicList(state = defaultState, action) {
             isRefreshing: false,
             isEndReached: false,
             didInvalidate: false,
-            list: getNewCache(state, validUserTopicList, userId, type, userTopicList.page, userTopicList.rs),
+            list: getNewCache(state, userTopicList.list, userId, type, userTopicList.page, userTopicList.rs),
             hasMore: !!userTopicList.has_next,
             page: userTopicList.page,
             errCode: userTopicList.errcode

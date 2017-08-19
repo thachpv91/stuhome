@@ -21,16 +21,17 @@ import { invalidateUserTopicList, fetchUserTopicList } from '../actions/user/top
 
 let TABS = [
   { label: '最近发表', type: 'topic' },
-  { label: '最近回复', type: 'reply' },
-  { label: '我的收藏', type: 'favorite' }
+  { label: '最近回复', type: 'reply' }
 ];
 
 class Individual extends Component {
   constructor(props) {
     super(props);
+    this._initBasicInformation();
+  }
 
-    this.isLoginUser = !this.props.passProps;
-    if (this.isLoginUser) {
+  _initBasicInformation() {
+    if (!this.props.passProps) {
       let {
         user: {
           authrization: {
@@ -43,7 +44,10 @@ class Individual extends Component {
       this.userId = uid;
       this.userName = userName;
       this.userAvatar = avatar;
-      TABS[2].label = '我的收藏';
+      TABS.push({
+        label: '我的收藏',
+        type: 'favorite'
+      });
     } else {
       let {
         userId,
@@ -53,7 +57,6 @@ class Individual extends Component {
       this.userId = userId;
       this.userName = userName;
       this.userAvatar = userAvatar;
-      TABS[2].label = 'TA的收藏';
     }
   }
 
