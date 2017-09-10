@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import AppState from 'AppState';
-import { View, Navigator } from 'react-native';
+import { View } from 'react-native';
+import { Navigator } from 'react-native-deprecated-custom-components';
 import CodePush from 'react-native-code-push';
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 import SideMenu from 'react-native-side-menu';
